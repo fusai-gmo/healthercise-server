@@ -13,3 +13,44 @@ services:
     build: api
     ports:
       - '80:80'
+  app:
+    build: ./docker_PHP/
+    ports:
+      - 8080:80
+    volumes:
+      - ./app:/var/www/app
+      - ./laravel-worker.conf:/etc/supervisor/conf.d/laravel-worker.conf
+    working_dir: /var/www/app/example-app
+    command: bash -c 'composer install &&
+      php artisan migrate:fresh --seed &&
+      a2enmod rewrite &&
+      apachectl -D FOREGROUND'
+  node:
+    image: node:16
+    tty: true
+    volumes:
+      - ./node/app:/workdir
+    working_dir: /workdir
+    # command: >
+    #   bash -c 'npm install && npm run watch'
+  python:
+    build: ./Docker/.
+    tty: true
+    volumes:
+      - ./python/app:/workdir
+    working_dir: /workdir
+  db:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    volumes:
+      - db-store:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+volumes:
+  db-store:
+
+
