@@ -42,3 +42,6 @@ logs/
 *.db
 
 .pytype/
+
+
+.env
