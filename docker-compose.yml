@@ -50,6 +50,13 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+  slack:
+    image: slack
+    environment:
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+
 volumes:
   db-store:
 
