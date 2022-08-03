@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+from datetime import datetime
 
 from urllib import parse
 
@@ -20,6 +21,20 @@ app = App(
     token=bot_token,
     signing_secret=secret
 )
+
+
+@app.message(r"Help|help")
+def show_help(event, say):
+    user_id = event["user"]
+    text = '''
+    These are possible messages to use with SlackBotTest.
+    
+    Messages:
+    Help or help:    Show possible commands.
+    Init or init:    Get register link of Healthercise.
+    
+    '''.format(user_id=user_id)
+    say(text=text)
 
 
 @app.message(r"Init|init")
@@ -69,4 +84,3 @@ def action_button_click(body, ack, say):
 if __name__ == "__main__":
     handler = SocketModeHandler(app, app_token)
     handler.start()
-
