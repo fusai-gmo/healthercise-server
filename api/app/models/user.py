@@ -19,6 +19,8 @@ class user(Base):
     weight = Column('weight', Integer)
 
 
+    notify_start_time = Column( 'notify_start_time', Time)
+    notify_finish_time = Column( 'notify_finish_time', Time)
 
 # def main(args):
 #     """
