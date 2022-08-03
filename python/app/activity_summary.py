@@ -11,7 +11,7 @@ class activity_summary(Base):
     """
     __tablename__ = 'activity_summary'
     id = Column('id', Integer, primary_key = True)
-    user_id = Column('user_id',ForeignKey("user.id"))
+    user_id = Column('user_id',ForeignKey("user.id"),unique=True)
     day = Column('day',DateTime)
     total_activity_calory = Column('total_activity_calory',Integer)
 def main(args):
