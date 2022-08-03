@@ -21,21 +21,6 @@ app = App(
 )
 
 
-def send_post_message():
-    channel_id = "D03S5N5V928"
-    client = WebClient(token=bot_token)
-    response = client.api_call(
-        api_method='chat.postMessage',
-        json={'channel': channel_id, 'text': "Hello world!"}
-    )
-    assert response["ok"]
-    assert response["message"]["text"] == "Hello world!"
-
-    prev_message = response['message']['text']
-    response = client.conversations_history(channel=channel_id)
-    print(response['messages'])
-
-
 # Listens to incoming messages that contain "hello"
 # To learn available listener method arguments,
 # visit https://slack.dev/bolt-python/api-docs/slack_bolt/kwargs_injection/args.html
