@@ -1,10 +1,11 @@
 import logging
 import os
+import re
+
+from urllib import parse
 
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
-
-from slack_sdk.web import WebClient
 
 import os
 from slack_bolt import App
@@ -19,6 +20,20 @@ app = App(
     token=bot_token,
     signing_secret=secret
 )
+
+
+@app.message(r"Init|init")
+@app.event("im_created")
+def ask_for_login(event, say):
+    user_id = event["user"]
+    query_param = parse.urlencode(
+        [
+            ("userid", user_id),
+        ]
+    )
+    healthercise_url = f'https://healthercise.k1h.dev/login?{query_param}'
+    text = f"Welcome to the team, <@{user_id}>! 🎉 Please access below link to use Healthercise.\n{healthercise_url}"
+    say(text=text)
 
 
 # Listens to incoming messages that contain "hello"
