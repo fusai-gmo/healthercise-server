@@ -1,14 +1,7 @@
-import logging
-import os
-import re
-from datetime import datetime
-
 from urllib import parse
-
-from slack_bolt import App
-from slack_bolt.adapter.socket_mode import SocketModeHandler
-
 import os
+
+from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack_bolt import App
 
 # Initialize a Bolt for Python app
@@ -51,6 +44,40 @@ def ask_for_login(event, say):
     say(text=text)
 
 
+@app.message(r"Finish|finish")
+def finish_report(message, say):
+    say(
+        blocks=[
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": f"Hi <@{message['user']}>!\nDo you complete today's exercise?"},
+                "accessory":
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "Yes"},
+                        "action_id": "button_click_yes",
+                    },
+                    # {
+                    #     "type": "button",
+                    #     "text": {"type": "plain_text", "text": "No"},
+                    #     "action_id": "button_click_no",
+                    # },
+            },
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": f"Hi <@{message['user']}>!\nDo you complete today's exercise?"},
+                "accessory":
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "No"},
+                    "action_id": "button_click_no",
+                },
+            },
+        ],
+        text=f"Hey there <@{message['user']}>!",
+    )
+
+
 # Listens to incoming messages that contain "hello"
 # To learn available listener method arguments,
 # visit https://slack.dev/bolt-python/api-docs/slack_bolt/kwargs_injection/args.html
@@ -78,6 +105,20 @@ def action_button_click(body, ack, say):
     # Acknowledge the action
     ack()
     say(f"<@{body['user']['id']}> clicked the button")
+
+
+@app.action("button_click_yes")
+def action_button_yes_click(body, ack, say):
+    # Acknowledge the action
+    ack()
+    say(f"Nice, <@{body['user']['id']}>! Congraturations!!")
+
+
+@app.action("button_click_no")
+def action_button_no_click(body, ack, say):
+    # Acknowledge the action
+    ack()
+    say(f"Ok, <@{body['user']['id']}>. Please try tomorrow!!")
 
 
 # Start your app
