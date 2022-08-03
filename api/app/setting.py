@@ -3,14 +3,15 @@ from sqlalchemy.orm import *
 from sqlalchemy.ext.declarative import declarative_base
 
 # mysqlのDBの設定
-DATABASE = 'mysql://%s:%s@%s/%s?charset=utf8' % (
-    "user",
-    "password",
-    "db",
-    "database",
-)
+# DATABASE = 'mysql://%s:%s@%s/%s?charset=utf8' % (
+#     "user",
+#     "password",
+#     "db",
+#     "database",
+# )
+
 ENGINE = create_engine(
-    DATABASE,
+    "mysql://user:password@db/database?charset=utf8",
     encoding = "utf-8",
     echo=True # Trueだと実行のたびにSQLが出力される
 )
@@ -19,8 +20,8 @@ ENGINE = create_engine(
 session = scoped_session(
   # ORM実行時の設定。自動コミットするか、自動反映するなど。
     sessionmaker(
-        autocommit = True,
-        autoflush = False,
+        autocommit = False,
+        autoflush = True,
         bind = ENGINE
     )
 )

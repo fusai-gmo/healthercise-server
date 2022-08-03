@@ -11,7 +11,7 @@ class user(Base):
     ユーザモデル
     """
     __tablename__ = 'user'
-    id = Column('id', Integer, primary_key = True)
+    id = Column('id', Integer, primary_key = True, autoincrement=True)
     name = Column('name', String(200))
     email = Column('email', String(100))
     age = Column('age', Integer)
@@ -20,11 +20,11 @@ class user(Base):
 
 
 
-def main(args):
-    """
-    メイン関数
-    """
-    Base.metadata.create_all(bind=ENGINE,checkfirst=True)
+# def main(args):
+#     """
+#     メイン関数
+#     """
+#     Base.metadata.create_all(bind=ENGINE,checkfirst=True)
 
-if __name__ == "__main__":
-    main(sys.argv)
+# if __name__ == "__main__":
+#     main(sys.argv)

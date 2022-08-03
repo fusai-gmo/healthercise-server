@@ -1,44 +1,12 @@
 version: '3'
 services:
-#  db:
-#    image: mysql:8.0
-#    ports:
-#      - '3306:3306'
-#    environment:
-#      MYSQL_DATABASE: database
-#      MYSQL_USER: user
-#      MYSQL_PASSWORD: password
-#      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
   api:
-    build: api
+    build: ./api
     ports:
       - '80:80'
-  app:
-    build: ./docker_PHP/
-    ports:
-      - 8080:80
-    volumes:
-      - ./app:/var/www/app
-      - ./laravel-worker.conf:/etc/supervisor/conf.d/laravel-worker.conf
-    working_dir: /var/www/app/example-app
-    command: bash -c 'composer install &&
-      php artisan migrate:fresh --seed &&
-      a2enmod rewrite &&
-      apachectl -D FOREGROUND'
-  node:
-    image: node:16
-    tty: true
-    volumes:
-      - ./node/app:/workdir
-    working_dir: /workdir
-    # command: >
-    #   bash -c 'npm install && npm run watch'
-  python:
-    build: ./Docker/.
-    tty: true
-    volumes:
-      - ./python/app:/workdir
-    working_dir: /workdir
+    depends_on:
+      - db
+    restart: always
   db:
     image: mysql:8.0
     ports:
@@ -50,12 +18,11 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-
-  slack:
-    image: slack
-    environment:
-      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
-      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+  # slack:
+  #   image: slack
+  #   environment:
+  #     SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+  #     SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
 
 volumes:
   db-store:
