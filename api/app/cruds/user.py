@@ -7,11 +7,38 @@ import schemas.user
 from sqlalchemy import Time
 from datetime import datetime as dt
 
-def get_user(db: Session, user_id: int):
-    return db.query(user_model.user).filter(user_model.user.id == user_id).first()
+async def get_user(db: Session, user_id: int):
+    output = {}
+    user = db.get(user_model.user, user_id)
+    sex = db.get(sex_model.sex, user_id)
+    commute = db.get(commute_model.commute, user_id)
+    go_commute = db.query(commute_model.commute).filter(commute_model.commute.isCommute == True)
+    leave_commute = db.query(commute_model.commute).filter( mute_model.commute.isCommute == True)
+    activity_level = db.get(activity_level_model.activity_level,user_id)
+    return {
+        "userName": user.name,
+        "email": user.email,
+        "gender": sex.sex,
+        "age": user.age,
+        "height": user.height,
+        "weight": user.weight,
+        "activeLevel": activity_level.level,
+        "includeCommutingTime": go_commute.commute_is_activity,
+        "goWorkTime": {
+            "start":go_commute.commute_start_time,
+            "finish":go_commute.commute_finish_time,
+        },
+        "leaveWorkTime":
+        {
+            "start":go_commute.commute_start_time,
+            "finish":go_commute.commute_finish_time,
+        },
+        "slackId": "NONE"
+    }
 
 def get_user_by_email(db: Session, email: str):
-    return db.query(user_model.user).filter(user_model.user.email == email).first()
+    # return db.query(user_model.user).filter(user_model.user.email == email).first()
+    pass
 
 def create_user(db: Session, user: schemas.user.UserCreate):
     new_id = False
