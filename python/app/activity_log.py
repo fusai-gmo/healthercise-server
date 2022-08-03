@@ -12,7 +12,7 @@ class activity_log(Base):
     """
     __tablename__ = 'activity_log'
     id = Column('id', Integer, primary_key = True)
-    user_id = Column('user_id',ForeignKey("user.id"))
+    user_id = Column('user_id',ForeignKey("user.id"),unique=True)
     activity_id = Column('activity_id',ForeignKey("activity.id"))
     suggest_start_time = Column( 'suggest_start_time', DateTime)
     suggest_finish_time = Column( 'suggest_finish_time', DateTime)

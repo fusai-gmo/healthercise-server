@@ -12,7 +12,7 @@ class sex(Base):
     """
     __tablename__ = 'sex'
     id = Column('id', Integer, primary_key = True)
-    user_id = Column('user_id', ForeignKey("user.id"))
+    user_id = Column('user_id', ForeignKey("user.id"),unique=True)
     sex = Column('sex', String(10))
 
 
