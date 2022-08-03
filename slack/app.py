@@ -25,7 +25,7 @@ def show_help(event, say):
     Messages:
     Help or help:    Show possible commands.
     Init or init:    Get register link of Healthercise.
-    
+    Finish or finish: Report whether exercise or not.
     '''.format(user_id=user_id)
     say(text=text)
 
