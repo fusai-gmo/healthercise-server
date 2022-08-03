@@ -10,12 +10,12 @@ class commute(Base):
     commuteモデル
     """
     __tablename__ = 'commute'
-    id = Column('id', Integer, primary_key = True, autoincrement=True)
-    user_id = Column('user_id', ForeignKey("user.id"))
+    id = Column('id', Integer, autoincrement=True)
+    user_id = Column('user_id', ForeignKey("user.id"),unique=True, primary_key = True)
     commute_start_time = Column( 'commute_start_time', Time)
     commute_finish_time = Column( 'commute_finish_time', Time)
     commute_is_activity = Column( 'commute_is_activity', Boolean)
-    isCommute = Column('is_commute', Boolean)
+    isCommute = Column('is_commute', Boolean, primary_key = True)
 
 # def main(args):
 #     """
