@@ -2,6 +2,7 @@ import logging
 import os
 
 from slack_bolt import App
+from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from slack_sdk.web import WebClient
 
@@ -9,21 +10,20 @@ import os
 from slack_bolt import App
 
 # Initialize a Bolt for Python app
-token = os.environ.get("SLACK_BOT_TOKEN")
+app_token = os.environ.get("SLACK_APP_TOKEN")
+bot_token = os.environ.get("SLACK_BOT_TOKEN")
 secret = os.environ.get("SLACK_SIGNING_SECRET")
-
-channel_id = "C03RXBYEVQA"
-
-client = WebClient(token=token)
 
 # Initializes your Bolt app with a bot token and signing secret
 app = App(
-    token=token,
+    token=bot_token,
     signing_secret=secret
 )
 
 
 def send_post_message():
+    channel_id = "D03S5N5V928"
+    client = WebClient(token=bot_token)
     response = client.api_call(
         api_method='chat.postMessage',
         json={'channel': channel_id, 'text': "Hello world!"}
@@ -67,5 +67,6 @@ def action_button_click(body, ack, say):
 
 # Start your app
 if __name__ == "__main__":
-    app.start(port=int(os.environ.get("PORT", 3000)))
+    handler = SocketModeHandler(app, app_token)
+    handler.start()
 

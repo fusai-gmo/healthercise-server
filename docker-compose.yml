@@ -54,6 +54,7 @@ services:
   slack:
     image: slack
     environment:
+      SLACK_APP_TOKEN: ${SLACK_APP_TOKEN}
       SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
       SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
 
