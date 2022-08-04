@@ -1,42 +1,19 @@
-from typing import Optional
+from urllib import parse
 
-from fastapi import FastAPI, APIRouter, HTTPException, Cookie, Header, Request
-from fastapi.middleware.cors import CORSMiddleware
-from routers import user, users, activity, auth, cron
-import cruds
+from fastapi import FastAPI, Request
 
-from setting import session, ENGINE, Base
-
-from slack_bolt import App
-from slack_bolt.adapter.fastapi import SlackRequestHandler
-
-# モデル読み込み
-import models.user
-import models.sex
-import models.commute
-import models.activity_level
-import models.token_type
-import models.access_token
-import models.activity_log
-import models.activity_summary
-import cruds.activity as activity_cruds
-from setting import session as db
 from fastapi.middleware.cors import CORSMiddleware
 
 import schemas
 
-Base.metadata.create_all(bind=ENGINE, checkfirst=True)
-
-# Slack
+from slack_bolt import App
+from slack_bolt.adapter.fastapi import SlackRequestHandler
 
 app = App()
 app_handler = SlackRequestHandler(app)
 
-@app.event("message")
+@app.event("message.im")
 def welcome_message(event, say):
-    print(event)
-    if event["channel_type"] != "im":
-        pass
     user_id = event["user"]
     query_param = parse.urlencode(
         [
@@ -146,37 +123,3 @@ def action_button_no_click(body, ack, say):
     # Acknowledge the action
     ack()
     say(f"Ok, <@{body['user']['id']}>. Please try tomorrow!!")
-
-# Fast API
-
-api = FastAPI()
-api.include_router(user.router)
-api.include_router(users.router)
-api.include_router(activity.router)
-api.include_router(auth.router)
-api.include_router(cron.router)
-
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-]
-
-api.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-"""
-Ping : 応答確認用
-"""
-
-@api.get('/ping')
-def ping():
-    return 'pong!'
-
-@api.post("/slack/events")
-async def endpoint(req: Request):
-    return await app_handler.handle(req)
