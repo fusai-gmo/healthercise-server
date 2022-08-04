@@ -8,8 +8,9 @@ from sqlalchemy import Time
 from datetime import datetime as dt
 
 async def get_user(db: Session, user_id: int):
-    users = db.query(sex_model.sex).join(sex_model.sex,user_model.user.id==sex_model.sex.user_id).all()
-    return users
+
+    users = db.query(user_model.user).join(sex_model.sex,user_model.user.id==sex_model.sex.user_id).first()
+    return users.sex
 
 def get_user_by_email(db: Session, email: str):
     # return db.query(user_model.user).filter(user_model.user.email == email).first()
@@ -27,7 +28,6 @@ def create_user(db: Session, user: schemas.user.UserCreate):
         notify_start_time=(dt.strptime(user.activeTime.start,"%H:%M")).time(),
         notify_finish_time=(dt.strptime(user.activeTime.finish,"%H:%M")).time()
     )
-    print(db.query(user_model.user))
     db.add(db_user)
     db.commit()
 
