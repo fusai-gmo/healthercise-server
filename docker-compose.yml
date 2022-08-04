@@ -4,11 +4,12 @@ services:
     build: ./api
     ports:
       - '80:80'
-    volumes:
-      - ./api/app:/app
     depends_on:
       - db
     restart: always
+    volumes:
+      - ./api/app:/app
+    command: /start-reload.sh
   db:
     image: mysql:8.0
     ports:
