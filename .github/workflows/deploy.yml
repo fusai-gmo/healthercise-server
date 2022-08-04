@@ -13,4 +13,4 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
     - name: run deploy script
-      run: /usr/bin/ssh fusai@api.healthercise.k1h.dev "./deploy.sh"
+      run: ssh fusai@api.healthercise.k1h.dev -i ~/.ssh/id_rsa "./deploy.sh"
