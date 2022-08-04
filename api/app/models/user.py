@@ -18,6 +18,7 @@ class user(Base):
     age = Column('age', Integer)
     height = Column('height', Integer)
     weight = Column('weight', Integer)
+    slack_id = Column('slack_id', String(100))
     sex = relationship('sex')
     commute = relationship('commute')
     activity_level = relationship('activity_level')

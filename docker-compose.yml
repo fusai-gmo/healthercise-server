@@ -8,10 +8,6 @@ services:
       - '8000:80'
     depends_on:
       - db
-    environment:
-      SLACK_APP_TOKEN: ${SLACK_APP_TOKEN}
-      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
-      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
     restart: always
     volumes:
       - ./api/app:/app
@@ -29,11 +25,11 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
   # slack:
-  #   image: slack
-  #   environment:
-  #     SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
-  #     SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+  #   build: ./slack
+  #   env_file:
+  #     - .env
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
