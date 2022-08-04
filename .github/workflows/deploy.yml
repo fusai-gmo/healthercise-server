@@ -14,4 +14,4 @@ jobs:
         name: id_rsa # 省略可
         known-hosts: ${{ secrets.KNOWN_HOSTS }} # 必須
     - name: run deploy script
-      run: bash deploy.sh
+      run: bash ssh fusai@api.healthercise.k1h.dev "./deploy.sh"
