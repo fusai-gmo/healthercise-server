@@ -3,3 +3,4 @@ sqlalchemy-migrate
 pymysql
 mysqlclient
 requests
+google.auth
