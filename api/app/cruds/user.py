@@ -21,7 +21,7 @@ async def get_user(db: Session, user_id: int):
         "height":user.height,
         "weight":user.weight,
         "activeLevel":user.activity_level[0].level,
-        "includeCommutingTime":user.commute[0].isCommute,
+        "includeCommutingTime":user.commute[0].commute_is_activity,
         "goWorkTime":{
             "start":user.commute[0].commute_start_time,
             "finish":user.commute[0].commute_finish_time
@@ -38,6 +38,27 @@ async def get_user(db: Session, user_id: int):
 
 def get_user_by_email(db: Session, email: str):
     return db.query(user_model.user).filter(user_model.user.email == email).first()
+
+def update_user(db:Session,new_user:user_schema.UserCreate, user_id):
+    user = db.query(user_model.user).get(user_id)
+    if user is None:
+        return None
+    user.name = new_user.userName
+    user.email = new_user.email
+    sex_dic={"male":1,"female":2,"other":3}
+    user.sex[0].sex = sex_dic[new_user.gender]
+    user.age = new_user.age
+    user.height = new_user.height
+    user.weight = new_user.weight
+    user.activity_level[0].level = new_user.activeLevel
+    user.commute[0].commute_is_activity=new_user.includeCommutingTime
+    user.commute[1].commute_is_activity=new_user.includeCommutingTime
+    user.commute[0].commute_start_time = new_user.goWorkTime.start
+    user.commute[0].commute_start_time = new_user.goWorkTime.finish
+    user.commute[1].commute_start_time = new_user.leaveWorkTime.start
+    user.commute[1].commute_start_time = new_user.leaveWorkTime.finish
+    db.commit()
+
 
 def create_user(db: Session, user: user_schema.UserCreate):
     new_id = False
@@ -64,7 +85,6 @@ def create_user(db: Session, user: user_schema.UserCreate):
         sex=sex_dic[user.gender]
     )
     db.add(db_sex)
-    db.commit()
 
     # Commute Table
     db_commute = commute_model.commute(
@@ -75,17 +95,15 @@ def create_user(db: Session, user: user_schema.UserCreate):
         commute_is_activity = user.includeCommutingTime
     )
     db.add(db_commute)
-    db.commit()
 
-    db_commute = commute_model.commute(
+    db_commute2 = commute_model.commute(
         user_id=user_id,
-        commute_start_time = (dt.strptime(user.goWorkTime.start,"%H:%M")).time(),
-        commute_finish_time = (dt.strptime(user.goWorkTime.finish,"%H:%M")).time(),
+        commute_start_time = (dt.strptime(user.leaveWorkTime.start,"%H:%M")).time(),
+        commute_finish_time = (dt.strptime(user.leaveWorkTime.finish,"%H:%M")).time(),
         isCommute = False,
         commute_is_activity = user.includeCommutingTime
     )
-    db.add(db_commute)
-    db.commit()
+    db.add(db_commute2)
 
     # Active Level Table
     db_activity_level = activity_level_model.activity_level(
@@ -95,4 +113,4 @@ def create_user(db: Session, user: user_schema.UserCreate):
     db.add(db_activity_level)
     db.commit()
 
-    return db_user
+    return get_user(db, user_id)

@@ -14,11 +14,12 @@ async def get_user_info(userId: int):
         raise HTTPException(status_code=400, detail="User not found")
     return db_user
 
-
-# @router.patch('/users/{userId}')
-# async def update_user_info():
-#     pass
-
+@router.patch('/users/{userId}')
+async def update_user_info(userId: int, user: user_schema.UserCreate):
+    db_user = await user_cruds.get_user(db, userId)
+    if not db_user:
+        raise HTTPException(status_code=400, detail="User not found")
+    return user_cruds.update_user(db, user,userId)
 
 # @router.get('/users/{userId}/achievement')
 # async def get_achievement():
