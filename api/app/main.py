@@ -21,6 +21,7 @@ import models.access_token
 import models.activity_log
 import models.activity_summary
 import cruds.activity as activity_cruds
+import cruds.user as user_cruds
 from setting import session as db
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -33,9 +34,11 @@ Base.metadata.create_all(bind=ENGINE, checkfirst=True)
 bot = App()
 bot_handler = SlackRequestHandler(bot)
 
-@bot.event("message")
-def welcome_message(event, say):
-    print(event)
+# @bot.event("message")
+# def welcome_message(event, say):
+#     print(event)
+@bot.message(r"register|Register")
+def show_help(event, say):
     if event["channel_type"] != "im":
         pass
     user_id = event["user"]
@@ -140,13 +143,15 @@ def action_button_yes_click(body, ack, say):
     # Acknowledge the action
     ack()
     say(f"Nice, <@{body['user']['id']}>! Congraturations!!")
+    userId = user_cruds.get_user_by_slackId(db,body['user']['id']).id
+    activity_cruds.update_recent_activity_finished(db, userId)
 
 
 @bot.action("button_click_no")
 def action_button_no_click(body, ack, say):
     # Acknowledge the action
     ack()
-    say(f"Ok, <@{body['user']['id']}>. Please try tomorrow!!")
+    say(f"Ok, <@{body['user']['id']}>. Please try next action!!")
 
 # Fast API
 
