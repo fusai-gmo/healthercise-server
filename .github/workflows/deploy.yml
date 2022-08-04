@@ -1,0 +1,16 @@
+on:
+  push:
+    branches:
+      - main
+name: Deploy
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: ssh key generate
+      run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+    - name: run deploy script
+      run: ssh fusai@api.healthercise.k1h.dev -i ~/.ssh/id_rsa "./deploy.sh"

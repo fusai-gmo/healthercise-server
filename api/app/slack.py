@@ -1,43 +1,19 @@
-from typing import Optional
-
-from fastapi import FastAPI, APIRouter, HTTPException, Cookie, Header, Request
-from fastapi.middleware.cors import CORSMiddleware
-from routers import user, users, activity, auth, cron
-import cruds
-
-from setting import session, ENGINE, Base
-
-from slack_bolt import App
-from slack_bolt.adapter.fastapi import SlackRequestHandler
 from urllib import parse
 
-# モデル読み込み
-import models.user
-import models.sex
-import models.commute
-import models.activity_level
-import models.token_type
-import models.access_token
-import models.activity_log
-import models.activity_summary
-import cruds.activity as activity_cruds
-from setting import session as db
+from fastapi import FastAPI, Request
+
 from fastapi.middleware.cors import CORSMiddleware
 
 import schemas
 
-Base.metadata.create_all(bind=ENGINE, checkfirst=True)
+from slack_bolt import App
+from slack_bolt.adapter.fastapi import SlackRequestHandler
 
-# Slack
+app = App()
+app_handler = SlackRequestHandler(app)
 
-bot = App()
-bot_handler = SlackRequestHandler(bot)
-
-@bot.event("message")
+@app.event("message.im")
 def welcome_message(event, say):
-    print(event)
-    if event["channel_type"] != "im":
-        pass
     user_id = event["user"]
     query_param = parse.urlencode(
         [
@@ -49,7 +25,7 @@ def welcome_message(event, say):
     say(text=text)
 
 
-@bot.message(r"Help|help")
+@app.message(r"Help|help")
 def show_help(event, say):
     user_id = event["user"]
     text = '''
@@ -63,8 +39,8 @@ def show_help(event, say):
     say(text=text)
 
 
-@bot.message(r"Init|init")
-@bot.event("im_created")
+@app.message(r"Init|init")
+@app.event("im_created")
 def ask_for_login(event, say):
     user_id = event["user"]
     query_param = parse.urlencode(
@@ -77,7 +53,7 @@ def ask_for_login(event, say):
     say(text=text)
 
 
-@bot.message(r"Finish|finish")
+@app.message(r"Finish|finish")
 def finish_report(message, say):
     say(
         blocks=[
@@ -109,7 +85,7 @@ def finish_report(message, say):
 # Listens to incoming messages that contain "hello"
 # To learn available listener method arguments,
 # visit https://slack.dev/bolt-python/api-docs/slack_bolt/kwargs_injection/args.html
-@bot.message("hello")
+@app.message("hello")
 def message_hello(message, say):
     # say() sends a message to the channel where the event was triggered
     say(
@@ -128,57 +104,22 @@ def message_hello(message, say):
     )
 
 
-@bot.action("button_click")
+@app.action("button_click")
 def action_button_click(body, ack, say):
     # Acknowledge the action
     ack()
     say(f"<@{body['user']['id']}> clicked the button")
 
 
-@bot.action("button_click_yes")
+@app.action("button_click_yes")
 def action_button_yes_click(body, ack, say):
     # Acknowledge the action
     ack()
     say(f"Nice, <@{body['user']['id']}>! Congraturations!!")
 
 
-@bot.action("button_click_no")
+@app.action("button_click_no")
 def action_button_no_click(body, ack, say):
     # Acknowledge the action
     ack()
     say(f"Ok, <@{body['user']['id']}>. Please try tomorrow!!")
-
-# Fast API
-
-app = FastAPI()
-app.include_router(user.router)
-app.include_router(users.router)
-app.include_router(activity.router)
-app.include_router(auth.router)
-app.include_router(cron.router)
-
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-"""
-Ping : 応答確認用
-"""
-
-@app.get('/ping')
-def ping():
-    return 'pong!'
-
-@app.post("/slack/events")
-async def endpoint(req: Request):
-    print(req)
-    return await bot_handler.handle(req)
