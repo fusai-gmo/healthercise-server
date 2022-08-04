@@ -10,6 +10,8 @@ services:
     volumes:
       - ./api/app:/app
     command: /start-reload.sh
+    env_file:
+      - .env
   db:
     image: mysql:8.0
     ports:
