@@ -8,8 +8,6 @@ router = APIRouter()
 
 @router.post('/user')
 async def add_new_user(user: user_schema.UserCreate, id_token: Optional[str] = Cookie(None)):
-    if id_token is None:
-      raise HTTPException(status_code=403, detail="Id token is not set")
     db_user = user_cruds.get_user_by_email(db, email=user.email)
     # Emailが登録済みの場合はエラーを返す
     if db_user is not None:
