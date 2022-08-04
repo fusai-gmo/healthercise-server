@@ -11,7 +11,7 @@ class commute(Base):
     """
     __tablename__ = 'commute'
     id = Column('id', Integer, autoincrement=True)
-    user_id = Column('user_id', ForeignKey("user.id"),unique=True, primary_key = True)
+    user_id = Column('user_id', ForeignKey("user.id"), primary_key = True)
     commute_start_time = Column( 'commute_start_time', Time)
     commute_finish_time = Column( 'commute_finish_time', Time)
     commute_is_activity = Column( 'commute_is_activity', Boolean)

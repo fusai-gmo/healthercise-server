@@ -1,6 +1,6 @@
 import sys
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, Float, DateTime, Time
 from sqlalchemy.schema import ForeignKey
 from sqlalchemy.orm import relationship
 from setting import Base

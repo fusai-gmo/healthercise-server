@@ -8,33 +8,8 @@ from sqlalchemy import Time
 from datetime import datetime as dt
 
 async def get_user(db: Session, user_id: int):
-    output = {}
-    user = db.get(user_model.user, user_id)
-    sex = db.get(sex_model.sex, user_id)
-    commute = db.get(commute_model.commute, user_id)
-    go_commute = db.query(commute_model.commute).filter(commute_model.commute.isCommute == True)
-    leave_commute = db.query(commute_model.commute).filter( mute_model.commute.isCommute == True)
-    activity_level = db.get(activity_level_model.activity_level,user_id)
-    return {
-        "userName": user.name,
-        "email": user.email,
-        "gender": sex.sex,
-        "age": user.age,
-        "height": user.height,
-        "weight": user.weight,
-        "activeLevel": activity_level.level,
-        "includeCommutingTime": go_commute.commute_is_activity,
-        "goWorkTime": {
-            "start":go_commute.commute_start_time,
-            "finish":go_commute.commute_finish_time,
-        },
-        "leaveWorkTime":
-        {
-            "start":go_commute.commute_start_time,
-            "finish":go_commute.commute_finish_time,
-        },
-        "slackId": "NONE"
-    }
+    users = db.query(sex_model.sex).join(sex_model.sex,user_model.user.id==sex_model.sex.user_id).all()
+    return users
 
 def get_user_by_email(db: Session, email: str):
     # return db.query(user_model.user).filter(user_model.user.email == email).first()
@@ -48,7 +23,9 @@ def create_user(db: Session, user: schemas.user.UserCreate):
         email=user.email,
         age=user.age,
         height=user.height,
-        weight=user.weight
+        weight=user.weight,
+        notify_start_time=(dt.strptime(user.activeTime.start,"%H:%M")).time(),
+        notify_finish_time=(dt.strptime(user.activeTime.finish,"%H:%M")).time()
     )
     print(db.query(user_model.user))
     db.add(db_user)
@@ -63,6 +40,8 @@ def create_user(db: Session, user: schemas.user.UserCreate):
         user_id=user_id,
         sex=sex_dic[user.gender]
     )
+    db.add(db_sex)
+    db.commit()
 
     # Commute Table
     db_commute = commute_model.commute(
