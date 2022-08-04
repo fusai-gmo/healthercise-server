@@ -3,7 +3,7 @@ services:
   api:
     build: ./api
     ports:
-      - '3000:80'
+      - '80:80'
     volumes:
       - ./api/app:/app
     depends_on:
