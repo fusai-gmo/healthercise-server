@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import FastAPI, APIRouter, HTTPException, Cookie, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
-from routers import user, users, activity, auth
+from routers import user, users, activity, auth, cron
 import cruds
 
 from setting import session, ENGINE, Base
@@ -29,6 +29,7 @@ app.include_router(user.router)
 app.include_router(users.router)
 app.include_router(activity.router)
 app.include_router(auth.router)
+app.include_router(cron.router)
 
 origins = [
     "http://localhost",
