@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from typing import Optional
+
+from fastapi import FastAPI, APIRouter, HTTPException, Cookie, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
 from routers import user, users, activity, auth
 import cruds
@@ -31,25 +33,6 @@ app.include_router(auth.router)
 origins = [
     "http://localhost",
     "http://localhost:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-    "http://api.healthercise.k1h.dev",
-    "https://api.healthercise.k1h.dev",
-    "http://healthercise.k1h.dev",
-    "https://healthercise.k1h.dev"
 ]
 
 app.add_middleware(
