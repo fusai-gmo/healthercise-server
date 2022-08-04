@@ -178,7 +178,7 @@ Ping : 応答確認用
 def ping():
     return 'pong!'
 
-@api.post("/slack/events")
-async def endpoint(req: Request):
-    print(req)
-    return await app_handler.handle(req)
+# @api.post("/slack/events")
+# async def endpoint(req: Request):
+#     print(req)
+#     return await app_handler.handle(req)
