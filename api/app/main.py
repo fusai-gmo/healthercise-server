@@ -9,6 +9,7 @@ from setting import session, ENGINE, Base
 
 from slack_bolt import App
 from slack_bolt.adapter.fastapi import SlackRequestHandler
+from urllib import parse
 
 # モデル読み込み
 import models.user
