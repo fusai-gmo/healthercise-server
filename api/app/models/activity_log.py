@@ -2,7 +2,7 @@ import sys
 import models.user
 import models.activity
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean
 from setting import Base
 from setting import ENGINE
 
@@ -17,6 +17,7 @@ class activity_log(Base):
     suggest_start_time = Column( 'suggest_start_time', DateTime)
     suggest_finish_time = Column( 'suggest_finish_time', DateTime)
 
+    is_done = Column('is_done', Boolean)
 # def main(args):
 #     """
 #     メイン関数
