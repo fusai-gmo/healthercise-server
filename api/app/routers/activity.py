@@ -21,3 +21,7 @@ async def get_recent_user_activity(userId: int):
 @router.patch('/activity/{userId}/done')
 async def get_recent_user_activity(userId: int):
     return activity_cruds.update_recent_activity_finished(db=db,user_id=userId)
+
+@router.patch('/activity/{userId}/slack')
+async def get_recent_user_activity(slackId: str):
+    return activity_cruds.update_recent_activity_finished_bySlack(db,slackId)
