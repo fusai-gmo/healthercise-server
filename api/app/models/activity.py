@@ -11,7 +11,7 @@ class activity(Base):
     """
     __tablename__ = 'activity'
     id = Column('id', Integer, primary_key = True, autoincrement=True)
-    strength = Column('strength', ForeignKey('activity_level.id',onupdate='CASCADE', ondelete='CASCADE'))
+    strength = Column('strength', String(100))
     name = Column('name', String(100) )
     calory = Column('calory', Integer )
 
