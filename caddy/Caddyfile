@@ -1,0 +1,18 @@
+www.{$HOSTNAME} {$HOSTNAME} {
+	redir http://{$HOSTNAME}{uri}
+}
+
+http://{$HOSTNAME} {
+  
+	encode zstd gzip
+
+	route /phpmyadmin/* {
+		reverse_proxy phpmyadmin:8080
+	}
+
+  route /* {
+    reverse_proxy api:80
+  }
+
+	log
+}
