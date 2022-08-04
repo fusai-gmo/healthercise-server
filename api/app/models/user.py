@@ -18,6 +18,11 @@ class user(Base):
     height = Column('height', Integer)
     weight = Column('weight', Integer)
     sex = relationship('sex')
+    commute = relationship('commute')
+    activity_level = relationship('activity_level')
+    access_token = relationship('access_token')
+    activity_log = relationship('activity_log')
+    activity_summary = relationship('activity_summary')
     
 
     notify_start_time = Column( 'notify_start_time', Time)
