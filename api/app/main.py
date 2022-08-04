@@ -139,11 +139,11 @@ def action_button_click(body, ack, say):
 
 
 @bot.action("button_click_yes")
-async def action_button_yes_click(body, ack, say):
-    userId = user_cruds.get_user_by_slackId(db,body['user']['id']).id
-    activity_cruds.update_recent_activity_finished(db, userId)
+def action_button_yes_click(body, ack, say):
     # Acknowledge the action
     ack()
+    userId = user_cruds.get_user_by_slackId(db,body['user']['id']).id
+    activity_cruds.update_recent_activity_finished(db, userId)s
     say(f"Nice, <@{body['user']['id']}>! Congraturations!!")
 
 
