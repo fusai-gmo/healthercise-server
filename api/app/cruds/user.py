@@ -9,6 +9,8 @@ from datetime import datetime as dt
 
 async def get_user(db: Session, user_id: int):
     user = db.query(user_model.user).get(user_id)
+    if user is None:
+        return None
     sex_dic={"1":"male","2":"female","3":"other"}
     return {
         "id":user.id,
