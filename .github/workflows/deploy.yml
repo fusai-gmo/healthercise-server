@@ -1,7 +1,7 @@
 on:
-  release:
-    types:
-    - published
+  push:
+    branches:
+      - main
 name: Deploy
 jobs:
   deploy:
