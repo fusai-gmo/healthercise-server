@@ -60,7 +60,7 @@ def update_user(db:Session,new_user:user_schema.UserCreate, user_id):
     db.commit()
 
 
-def create_user(db: Session, user: user_schema.UserCreate):
+async def create_user(db: Session, user: user_schema.UserCreate):
     new_id = False
     # User Table
     db_user = user_model.user(
@@ -113,4 +113,4 @@ def create_user(db: Session, user: user_schema.UserCreate):
     db.add(db_activity_level)
     db.commit()
 
-    return get_user(db, user_id)
+    return await get_user(db, user_id)

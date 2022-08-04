@@ -15,7 +15,7 @@ async def add_new_user(user: user_schema.UserCreate, id_token: Optional[str] = C
     # Emailが登録済みの場合はエラーを返す
     if db_user is not None:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return user_cruds.create_user(db=db,user=user)
+    return await user_cruds.create_user(db=db,user=user)
 
 
 @router.get('/user/getId/{slackId}')
