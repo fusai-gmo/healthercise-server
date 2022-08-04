@@ -94,16 +94,16 @@ def finish_report(message, say):
                         "action_id": "button_click_yes",
                     },
             },
-            {
-                "type": "section",
-                "text": {"type": "mrkdwn", "text": f"Hi <@{message['user']}>!\nDo you complete today's exercise?"},
-                "accessory":
-                    {
-                        "type": "button",
-                        "text": {"type": "plain_text", "text": "No"},
-                        "action_id": "button_click_no",
-                    },
-            },
+            # {
+            #     "type": "section",
+            #     "text": {"type": "mrkdwn", "text": f"Hi <@{message['user']}>!\nDo you complete today's exercise?"},
+            #     "accessory":
+            #         {
+            #             "type": "button",
+            #             "text": {"type": "plain_text", "text": "No"},
+            #             "action_id": "button_click_no",
+            #         },
+            # },
         ],
         text=f"Hey there <@{message['user']}>!",
     )
