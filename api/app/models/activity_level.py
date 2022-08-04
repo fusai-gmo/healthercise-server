@@ -15,6 +15,8 @@ class activity_level(Base):
     user_id = Column('user_id', ForeignKey("user.id"))
     level = Column('level', String(300))
 
+    activity_log = relationship('activity_log')
+
 
 # def main(args):
 #     """
