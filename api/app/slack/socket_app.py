@@ -22,28 +22,27 @@ app = App(
 )
 
 
-@app.message(r".+")
-# @app.event("message.im")
+@app.message(r"Help|help")
 def show_help(event, say):
     user_id = event["user"]
-
     if event['channel_type'] != "im":
         return
     text = '''
     These are possible messages to use with SlackBotTest.
 
     Messages:
-    Help or help:    Show possible commands.
-    Init or init:    Get register link of Healthercise.
-
+    Help or help:        Show possible commands.
+    Init or init:        Get register link of Hefalthercise.
+    Finish or finish:    Report finish exercise or not.
     '''.format(user_id=user_id)
     say(text=text)
 
 
 @app.message(r"Init|init")
-@app.event("im_created")
 def ask_for_login(event, say):
     user_id = event["user"]
+    if event['channel_type'] != "im":
+        return
     query_param = parse.urlencode(
         [
             ("userid", user_id),
@@ -54,25 +53,35 @@ def ask_for_login(event, say):
     say(text=text)
 
 
-# Listens to incoming messages that contain "hello"
-# To learn available listener method arguments,
-# visit https://slack.dev/bolt-python/api-docs/slack_bolt/kwargs_injection/args.html
-@app.message("hello")
-def message_hello(message, say):
-    # say() sends a message to the channel where the event was triggered
+@app.message(r"Finish|finish")
+def finish_report(event, say):
+    user = event['user']
+    if event['channel_type'] != "im":
+        return
     say(
         blocks=[
             {
                 "type": "section",
-                "text": {"type": "mrkdwn", "text": f"Hey there <@{message['user']}>!"},
-                "accessory": {
-                    "type": "button",
-                    "text": {"type": "plain_text", "text": "Click Me"},
-                    "action_id": "button_click",
-                },
-            }
+                "text": {"type": "mrkdwn", "text": f"Hi <@{user}>!\nDo you complete today's exercise?"},
+                "accessory":
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "Yes"},
+                        "action_id": "button_click_yes",
+                    },
+            },
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": f"Hi <@{user}>!\nDo you complete today's exercise?"},
+                "accessory":
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "No"},
+                        "action_id": "button_click_no",
+                    },
+            },
         ],
-        text=f"Hey there <@{message['user']}>!",
+        text=f"Hey there <@{user}>!",
     )
 
 
@@ -81,6 +90,20 @@ def action_button_click(body, ack, say):
     # Acknowledge the action
     ack()
     say(f"<@{body['user']['id']}> clicked the button")
+
+
+@app.action("button_click_yes")
+def action_button_yes_click(body, ack, say):
+    # Acknowledge the action
+    ack()
+    say(f"Nice, <@{body['user']['id']}>! Congraturations!!")
+
+
+@app.action("button_click_no")
+def action_button_no_click(body, ack, say):
+    # Acknowledge the action
+    ack()
+    say(f"Ok, <@{body['user']['id']}>. Please try tomorrow!!")
 
 
 def socket_server():
