@@ -3,20 +3,41 @@ import models.user as user_model
 import models.sex as sex_model
 import models.commute as commute_model
 import models.activity_level as activity_level_model
-import schemas.user
+import schemas.user as user_schema
 from sqlalchemy import Time
 from datetime import datetime as dt
 
 async def get_user(db: Session, user_id: int):
-
-    users = db.query(user_model.user).join(sex_model.sex,user_model.user.id==sex_model.sex.user_id).first()
-    return users.sex
+    user = db.query(user_model.user).get(user_id)
+    sex_dic={"1":"male","2":"female","3":"other"}
+    return {
+        "id":user.id,
+        "userName":user.name,
+        "email":user.email,
+        "gender": sex_dic[user.sex[0].sex],
+        "age":user.age,
+        "height":user.height,
+        "weight":user.weight,
+        "activeLevel":user.activity_level[0].level,
+        "includeCommutingTime":user.commute[0].isCommute,
+        "goWorkTime":{
+            "start":user.commute[0].commute_start_time,
+            "finish":user.commute[0].commute_finish_time
+        },
+        "leaveWorkTime":{
+            "start":user.commute[1].commute_start_time,
+            "finish":user.commute[1].commute_finish_time
+        },
+        "activeTime":{
+            "start":user.notify_start_time,
+            "finish":user.notify_finish_time
+        }
+    }
 
 def get_user_by_email(db: Session, email: str):
-    # return db.query(user_model.user).filter(user_model.user.email == email).first()
-    pass
+    return db.query(user_model.user).filter(user_model.user.email == email).first()
 
-def create_user(db: Session, user: schemas.user.UserCreate):
+def create_user(db: Session, user: user_schema.UserCreate):
     new_id = False
     # User Table
     db_user = user_model.user(

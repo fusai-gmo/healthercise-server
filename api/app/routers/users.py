@@ -9,8 +9,6 @@ router = APIRouter()
 
 @router.get('/users/{userId}')
 async def get_user_info(userId: int):
-    print("OK")
-    print("userID", userId)
     db_user = await user_cruds.get_user(db, userId)
     if not db_user:
         raise HTTPException(status_code=400, detail="User not found")
