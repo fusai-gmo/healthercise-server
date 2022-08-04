@@ -12,12 +12,18 @@ class user(Base):
     """
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key = True, autoincrement=True)
+    firebase_id = Column('firebase_id', String(50))
     name = Column('name', String(200))
     email = Column('email', String(100))
     age = Column('age', Integer)
     height = Column('height', Integer)
     weight = Column('weight', Integer)
     sex = relationship('sex')
+    commute = relationship('commute')
+    activity_level = relationship('activity_level')
+    access_token = relationship('access_token')
+    activity_log = relationship('activity_log')
+    activity_summary = relationship('activity_summary')
     
 
     notify_start_time = Column( 'notify_start_time', Time)
