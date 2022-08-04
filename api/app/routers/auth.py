@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, Cookie
 from fastapi.responses import RedirectResponse
 from google.oauth2 import id_token as google_id_token
 from google.auth.transport import requests as google_requests
+from auth.id_token import verify_id_token
 import requests
 import os
 
@@ -30,8 +31,6 @@ async def auth_callback(code: str = ''):
       raise HTTPException(status_code=500, detail="Something goes wrong.")
 
     data = res.json()
-
-    print(data)
     
     refresh_token = data['refresh_token']
     id_token = data['id_token']
@@ -46,12 +45,8 @@ async def auth_callback(code: str = ''):
 
 @router.get('/auth/me')
 def auth_me(id_token: Optional[str] = Cookie(None)):
-    if id_token is None:
-        raise HTTPException(status_code=403, detail="Id token is not set")
-    
-    id_info = google_id_token.verify_oauth2_token(id_token, google_requests.Request(), client_id)
-    user_id = id_info['sub']
-    
+    user_info = verify_id_token(id_token)
+    user_id = user_info['uid']
     # TODO: fetch user data from db.
     
     return user_id
