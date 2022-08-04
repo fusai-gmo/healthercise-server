@@ -2,16 +2,15 @@ version: '3'
 services:
   api:
     build: ./api
-    ports:
-      - '80:80'
+    volumes:
+      - ./api/app:/app
     depends_on:
       - db
     restart: always
-    volumes:
-      - ./api/app:/app
     command: /start-reload.sh
-    env_file:
-      - .env
+    ports:
+      - 3000:80
+
   db:
     image: mysql:8.0
     ports:
@@ -36,14 +35,27 @@ services:
       - PMA_HOST=db
       - PMA_USER=user
       - PMA_PASSWORD=password
-    links:
-      - db
     ports:
       - 8080:80
+    links:
+      - db
     volumes:
       - /sessions
 
+  proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
 volumes:
   db-store:
-
-
+  caddy_data:
+    driver: "local"
+  images:
+    driver: "local"

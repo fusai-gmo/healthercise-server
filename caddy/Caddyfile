@@ -1,14 +1,14 @@
-api.healthercise.k1h.dev {
+:80 {
   
 	encode zstd gzip
 
 	route /phpmyadmin/* {
-		reverse_proxy http://phpmyadmin:8080
+		reverse_proxy phpmyadmin:80
 	}
 
-  route /* {
-    reverse_proxy http://api:3000
-  }
+	route */ {
+		reverse_proxy api:80
+	}
 
 	log
 }
