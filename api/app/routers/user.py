@@ -16,5 +16,5 @@ async def add_new_user(user: user_schema.UserCreate, id_token: Optional[str] = C
 
 
 @router.get('/user/getId/{slackId}')
-async def get_slack_id():
+def get_slack_id():
     pass
