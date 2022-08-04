@@ -19,12 +19,12 @@ async def get_user_info(userId: str, id_token: Optional[str] = Cookie(None)):
 
 @router.patch('/users/{userId}')
 async def update_user_info(userId: int, user: user_schema.UserCreate, id_token: Optional[str] = Cookie(None)):
-    verify_user(id_token, userId)
+    await verify_user(id_token, userId)
 
     db_user = await user_cruds.get_user(db, userId)
-    if not db_user:
-        raise HTTPException(status_code=400, detail="User not found")
-    return user_cruds.update_user(db, user,userId)
+    # if not db_user:
+    #     raise HTTPException(status_code=400, detail="User not found")
+    return user_cruds.update_user(db, user, userId)
 
 # @router.get('/users/{userId}/achievement')
 # async def get_achievement():

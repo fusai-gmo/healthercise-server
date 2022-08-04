@@ -36,6 +36,9 @@ async def get_user(db: Session, user_id: int):
         }
     }
 
+async def get_user_by_firebase_id(db: Session, firebase_id: str):
+    return db.query(user_model.user).filter(user_model.user.firebase_id == firebase_id).first()
+
 def get_user_by_email(db: Session, email: str):
     return db.query(user_model.user).filter(user_model.user.email == email).first()
 

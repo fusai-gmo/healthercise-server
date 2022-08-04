@@ -4,6 +4,8 @@ from fastapi.responses import RedirectResponse
 from google.oauth2 import id_token as google_id_token
 from google.auth.transport import requests as google_requests
 from auth.id_token import verify_id_token
+from cruds.user import get_user_by_firebase_id
+from setting import session as db
 import requests
 import os
 
@@ -44,9 +46,11 @@ async def auth_callback(code: str = ''):
     return response
 
 @router.get('/auth/me')
-def auth_me(id_token: Optional[str] = Cookie(None)):
+async def auth_me(id_token: Optional[str] = Cookie(None)):
     user_info = verify_id_token(id_token)
     user_id = user_info['uid']
-    # TODO: fetch user data from db.
     
-    return user_id
+    res = await get_user_by_firebase_id(db, user_id)
+    if res is None:
+      raise HTTPException(status_code=404, detail="User not found")
+    return res
