@@ -38,6 +38,9 @@ async def get_user(db: Session, user_id: int):
         "activity_log": user.activity_log
     }
 
+async def get_user_by_firebase_id(db: Session, firebase_id: str):
+    return db.query(user_model.user).filter(user_model.user.firebase_id == firebase_id).first()
+
 def get_user_by_email(db: Session, email: str):
     return db.query(user_model.user).filter(user_model.user.email == email).first()
 
@@ -69,6 +72,7 @@ async def create_user(db: Session, user: user_schema.UserCreate):
     new_id = False
     # User Table
     db_user = user_model.user(
+        firebase_id=user.firebaseId,
         name=user.userName,
         email=user.email,
         age=user.age,
