@@ -2,6 +2,8 @@ from fastapi import HTTPException
 from google.oauth2 import id_token as google_id_token
 from google.auth.transport import requests as google_requests
 from google.auth.transport.requests import exceptions
+from cruds.user import get_user_by_firebase_id
+from setting import session as db
 import os
 
 client_id = os.getenv("GOOGLE_API_CLIENT_ID", "not set")
@@ -29,9 +31,10 @@ def verify_id_token(id_token: str):
 """
 ユーザー本人によるリクエストかチェックし、(firebaseの) user_idを返す
 """
-def verify_user(id_token: str, user_id: str):
+async def verify_user(id_token: str, user_id: str):
   user_info = verify_id_token(id_token)
-  if user_info['uid'] != user_id:
+  user = await get_user_by_firebase_id(db, user_info['uid'])
+  if user.id != user_id:
     raise HTTPException(status_code=403, detail="Forbidden")
-  return user_info
+  return user
 
