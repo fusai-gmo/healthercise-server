@@ -150,19 +150,19 @@ Base.metadata.create_all(bind=ENGINE, checkfirst=True)
 
 # Fast API
 
-api = FastAPI()
-api.include_router(user.router)
-api.include_router(users.router)
-api.include_router(activity.router)
-api.include_router(auth.router)
-api.include_router(cron.router)
+app = FastAPI()
+app.include_router(user.router)
+app.include_router(users.router)
+app.include_router(activity.router)
+app.include_router(auth.router)
+app.include_router(cron.router)
 
 origins = [
     "http://localhost",
     "http://localhost:3000",
 ]
 
-api.add_middleware(
+app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
@@ -174,7 +174,7 @@ api.add_middleware(
 Ping : 応答確認用
 """
 
-@api.get('/ping')
+@app.get('/ping')
 def ping():
     return 'pong!'
 
