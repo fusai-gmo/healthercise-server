@@ -3,6 +3,9 @@ from fastapi import APIRouter, HTTPException, Cookie
 from fastapi.responses import RedirectResponse
 from google.oauth2 import id_token as google_id_token
 from google.auth.transport import requests as google_requests
+from auth.id_token import verify_id_token
+from cruds.user import get_user_by_firebase_id
+from setting import session as db
 import requests
 import os
 
@@ -30,8 +33,6 @@ async def auth_callback(code: str = ''):
       raise HTTPException(status_code=500, detail="Something goes wrong.")
 
     data = res.json()
-
-    print(data)
     
     refresh_token = data['refresh_token']
     id_token = data['id_token']
@@ -45,13 +46,11 @@ async def auth_callback(code: str = ''):
     return response
 
 @router.get('/auth/me')
-def auth_me(id_token: Optional[str] = Cookie(None)):
-    if id_token is None:
-        raise HTTPException(status_code=403, detail="Id token is not set")
+async def auth_me(id_token: Optional[str] = Cookie(None)):
+    user_info = verify_id_token(id_token)
+    user_id = user_info['uid']
     
-    id_info = google_id_token.verify_oauth2_token(id_token, google_requests.Request(), client_id)
-    user_id = id_info['sub']
-    
-    # TODO: fetch user data from db.
-    
-    return user_id
+    res = await get_user_by_firebase_id(db, user_id)
+    if res is None:
+      raise HTTPException(status_code=404, detail="User not found")
+    return res

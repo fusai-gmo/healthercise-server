@@ -10,6 +10,7 @@ class TimeDuration(BaseModel):
 
 class UserBase(BaseModel):
     userName: str = Field(None, example="Mike")
+    firebaseId: str = Field(None, example="012")
     email: str = Field(None, example="eaxmple.com")
     gender: str = Field(None, example="male")
     age: int = Field(0, example=18)
