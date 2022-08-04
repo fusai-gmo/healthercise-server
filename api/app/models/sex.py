@@ -15,6 +15,8 @@ class sex(Base):
     user_id = Column('user_id', ForeignKey("user.id"),unique=True)
     sex = Column('sex', String(10))
 
+    user = relationship('user')
+
 
 # def main(args):
 #     """
