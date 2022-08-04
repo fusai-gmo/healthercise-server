@@ -9,6 +9,12 @@ from sqlalchemy import Time
 from datetime import datetime as dt
 import schemas.activity as activity_schema
 
+def get_activity_of_user(db: Session, user_id: int):
+    strength_of_user = db.query(user_model.user).filter(user_model.user.id == user_id ).first().activity_level[0].level
+    activity_of_user = db.query(activity_model.activity).filter(activity_model.activity.strength == strength_of_user).first()
+    return activity_of_user
+
+
 def create_activity(db: Session, activity: activity_schema):
     db.add(activity_model.activity(
       strength=activity.strength,
