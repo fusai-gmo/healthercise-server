@@ -3,7 +3,8 @@ sqlalchemy-migrate
 pymysql
 mysqlclient
 slack_sdk
-slack_bolt
+slack_bolt == 1.14.3
 certifi
 requests
 google.auth
+aiohttp
