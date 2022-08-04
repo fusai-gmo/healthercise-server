@@ -12,7 +12,7 @@ async def add_new_user(user: user_schema.UserCreate, id_token: Optional[str] = C
       raise HTTPException(status_code=403, detail="Id token is not set")
     db_user = user_cruds.get_user_by_email(db, email=user.email)
     # Emailが登録済みの場合はエラーを返す
-    if db_user == '{}':
+    if db_user is not None:
         raise HTTPException(status_code=400, detail="Email already registered")
     return user_cruds.create_user(db=db,user=user)
 

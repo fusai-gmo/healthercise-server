@@ -16,6 +16,8 @@ class activity_level(Base):
     level = Column('level', String(300))
 
 
+
+
 # def main(args):
 #     """
 #     メイン関数
