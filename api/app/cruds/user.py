@@ -64,6 +64,7 @@ async def create_user(db: Session, user: user_schema.UserCreate):
     new_id = False
     # User Table
     db_user = user_model.user(
+        firebase_id=user.firebaseId,
         name=user.userName,
         email=user.email,
         age=user.age,
