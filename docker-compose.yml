@@ -9,6 +9,7 @@ services:
     depends_on:
       - db
     restart: always
+    command: /start-reload.sh
   db:
     image: mysql:8.0
     ports:
