@@ -5,3 +5,5 @@ mysqlclient
 slack_sdk
 slack_bolt
 certifi
+requests
+google.auth
