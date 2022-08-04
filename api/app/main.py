@@ -1,5 +1,8 @@
-from fastapi import FastAPI
-from routers import user, users, activity
+from typing import Optional
+
+from fastapi import FastAPI, APIRouter, HTTPException, Cookie, Header, Request
+from fastapi.middleware.cors import CORSMiddleware
+from routers import user, users, activity, auth
 import cruds
 
 from setting import session, ENGINE, Base
@@ -25,14 +28,11 @@ app = FastAPI()
 app.include_router(user.router)
 app.include_router(users.router)
 app.include_router(activity.router)
+app.include_router(auth.router)
 
 origins = [
     "http://localhost",
     "http://localhost:3000",
-    "http://api.healthercise.k1h.dev",
-    "https://api.healthercise.k1h.dev",
-    "http://healthercise.k1h.dev",
-    "https://healthercise.k1h.dev"
 ]
 
 app.add_middleware(
@@ -44,7 +44,7 @@ app.add_middleware(
 )
 
 """
-Ping :　応答確認用
+Ping : 応答確認用
 """
 
 @app.get('/ping')
