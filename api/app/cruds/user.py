@@ -22,6 +22,7 @@ async def get_user(db: Session, user_id: int):
         "weight":user.weight,
         "activeLevel":user.activity_level[0].level,
         "includeCommutingTime":user.commute[0].commute_is_activity,
+        "slackId":user.slackId,
         "goWorkTime":{
             "start":user.commute[0].commute_start_time,
             "finish":user.commute[0].commute_finish_time
@@ -39,6 +40,9 @@ async def get_user(db: Session, user_id: int):
 
 def get_user_by_email(db: Session, email: str):
     return db.query(user_model.user).filter(user_model.user.email == email).first()
+
+def get_user_by_slackId(db: Session, slackId: str):
+    return db.query(user_model.user).filter(user_model.user.slackId == slackId).first()
 
 def update_user(db:Session,new_user:user_schema.UserCreate, user_id):
     user = db.query(user_model.user).get(user_id)
