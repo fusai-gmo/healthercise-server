@@ -11,5 +11,5 @@ async def detect_user_activity(userId: int):
 
 
 @router.post('/activity')
-async def add_new_user(activity: activity_schema.Activity):
+async def create_new_activity(activity: activity_schema.Activity):
     return activity_cruds.create_activity(db=db,activity=activity)
