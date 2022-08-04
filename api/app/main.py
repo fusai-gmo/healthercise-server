@@ -140,8 +140,7 @@ def action_button_click(body, ack, say):
 
 @bot.action("button_click_yes")
 async def action_button_yes_click(body, ack, say):
-    userId = (await user_cruds.get_user_by_slackId(db,body['user']['id'])).id
-    print("UserId is ",userId)
+    userId = user_cruds.get_user_by_slackId(db,body['user']['id']).id
     activity_cruds.update_recent_activity_finished(db, userId)
     # Acknowledge the action
     ack()
