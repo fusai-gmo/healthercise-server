@@ -113,5 +113,6 @@ def socket_server():
 
 # Start your app
 if __name__ == "__main__":
+    print("Slack Bot Ready!")
     handler = SocketModeHandler(app, app_token)
     handler.start()
