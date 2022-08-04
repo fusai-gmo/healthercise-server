@@ -27,3 +27,12 @@ def create_activity(db: Session, activity: activity_schema):
       name=activity.name,
       calory=activity.calory
     )
+    
+def get_recent_activity_finished(db: Session, user_id: int):
+    user = db.query(user_model.user).get(user_id)
+    return user.activity_log[0]
+    
+def update_recent_activity_finished(db: Session, user_id: int):
+    user = db.query(user_model.user).get(user_id)
+    user.activity_log[0].is_done = True
+    return user.activity_log[0]
