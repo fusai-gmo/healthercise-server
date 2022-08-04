@@ -33,7 +33,8 @@ async def get_user(db: Session, user_id: int):
         "activeTime":{
             "start":user.notify_start_time,
             "finish":user.notify_finish_time
-        }
+        },
+        "activity_log": user.activity_log
     }
 
 def get_user_by_email(db: Session, email: str):
@@ -70,7 +71,8 @@ async def create_user(db: Session, user: user_schema.UserCreate):
         height=user.height,
         weight=user.weight,
         notify_start_time=(dt.strptime(user.activeTime.start,"%H:%M")).time(),
-        notify_finish_time=(dt.strptime(user.activeTime.finish,"%H:%M")).time()
+        notify_finish_time=(dt.strptime(user.activeTime.finish,"%H:%M")).time(),
+        slack_id=user.slackId,
     )
     db.add(db_user)
     db.commit()
