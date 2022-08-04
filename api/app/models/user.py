@@ -17,7 +17,8 @@ class user(Base):
     age = Column('age', Integer)
     height = Column('height', Integer)
     weight = Column('weight', Integer)
-
+    id = relationship('sex')
+    
 
     notify_start_time = Column( 'notify_start_time', Time)
     notify_finish_time = Column( 'notify_finish_time', Time)
