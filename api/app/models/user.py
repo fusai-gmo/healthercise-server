@@ -12,6 +12,7 @@ class user(Base):
     """
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key = True, autoincrement=True)
+    firebase_id = Column('firebase_id', String(50))
     name = Column('name', String(200))
     email = Column('email', String(100))
     age = Column('age', Integer)
