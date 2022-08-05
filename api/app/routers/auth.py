@@ -43,7 +43,7 @@ async def auth_callback(code: str = ''):
     id_info = google_id_token.verify_oauth2_token(id_token, google_requests.Request(), client_id)
     user = await get_user_by_firebase_id(db, id_info['sub'])
 
-    save_refresh_token(db, refresh_token, id_info['sub'], user)
+    await save_refresh_token(db, refresh_token, id_info['sub'], user)
 
     response = RedirectResponse(url='http://localhost:3000/profile')
     response.set_cookie(key="id_token", value=id_token, httponly=True, secure=True)
@@ -54,7 +54,6 @@ async def auth_callback(code: str = ''):
 async def auth_me(id_token: Optional[str] = Cookie(None)):
     user_info = verify_id_token(id_token)
     user_id = user_info['uid']
-    
     res = await get_user_by_firebase_id(db, user_id)
     if res is None:
       raise HTTPException(status_code=404, detail="User not found")
