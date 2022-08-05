@@ -6,6 +6,7 @@ from google.auth.transport import requests as google_requests
 from auth.id_token import verify_id_token
 from cruds.user import get_user_by_firebase_id
 from setting import session as db
+from cruds.token import save_refresh_token
 import requests
 import os
 
@@ -30,6 +31,7 @@ async def auth_callback(code: str = ''):
     res = requests.post(url, json = payload)
 
     if res.status_code != 200:
+      print(res)
       raise HTTPException(status_code=500, detail="Something goes wrong.")
 
     data = res.json()
@@ -38,7 +40,10 @@ async def auth_callback(code: str = ''):
     id_token = data['id_token']
     # access_token = data['access_token']
 
-    # TODO: save refresh_token to db
+    id_info = google_id_token.verify_oauth2_token(id_token, google_requests.Request(), client_id)
+    user = await get_user_by_firebase_id(db, id_info['sub'])
+
+    save_refresh_token(db, refresh_token, id_info['sub'], user)
 
     response = RedirectResponse(url='http://localhost:3000/profile')
     response.set_cookie(key="id_token", value=id_token, httponly=True, secure=True)
