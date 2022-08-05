@@ -13,6 +13,8 @@ import os
 client_id = os.getenv("GOOGLE_API_CLIENT_ID", "not set")
 client_secret = os.getenv("GOOGLE_API_CLIENT_SECRET", "not set")
 redirect_uri = os.getenv("GOOGLE_API_REDIRECT_URI", "not set")
+app_redirect_uri = os.getenv("APP_REDIRECT_URI", "not set")
+
 
 router = APIRouter()
 
@@ -45,7 +47,7 @@ async def auth_callback(code: str = ''):
 
     await save_refresh_token(db, refresh_token, id_info['sub'], user)
 
-    response = RedirectResponse(url='http://localhost:3000/profile')
+    response = RedirectResponse(url=app_redirect_uri)
     response.set_cookie(key="id_token", value=id_token, httponly=True, secure=True)
 
     return response
