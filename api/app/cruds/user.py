@@ -39,6 +39,10 @@ async def get_user(db: Session, user_id: int):
     if user is None:
         return None
     sex_dic={"1":"male","2":"female","3":"other"}
+    
+    print("user.activity_log=====================")
+    print(user.activity_log)
+    print("user.activity_log=====================")
 
     return {
         "id":user.id,
@@ -64,7 +68,7 @@ async def get_user(db: Session, user_id: int):
             "finish":user.notify_finish_time
         },
         "activity_log": user.activity_log,
-        "todos":token_crud.get_users_calendar(user_id),
+        "todos":get_users_calendar(user_id),
     }
 
 async def get_user_by_firebase_id(db: Session, firebase_id: str):
@@ -84,12 +88,12 @@ def update_user(db:Session,new_user:user_schema.UserCreate, user_id):
     user.name = new_user.userName
     user.email = new_user.email
     sex_dic={"male":1,"female":2,"other":3}
-    user.sex[0].sex = sex_dic[new_user.gender]
+    # user.sex[0].sex = sex_dic[new_user.gender]
     user.age = new_user.age
     user.height = new_user.height
     user.weight = new_user.weight
     user.slack_id = new_user.slackId
-    user.activity_level[0].level = new_user.activeLevel
+    # user.activity_level[0].level = new_user.activeLevel
     # user.commute[0].commute_is_activity=new_user.includeCommutingTime
     # user.commute[1].commute_is_activity=new_user.includeCommutingTime
     # user.commute[0].commute_start_time = new_user.goWorkTime.start
@@ -223,8 +227,8 @@ def get_access_token(db: Session, user_id: str):
 
     # POST
     data = {
-        'client_id': os.environ.get('CLIENT_ID'),
-        'client_secret': os.environ.get('CLIENT_SECRET'),
+        'client_id': os.environ.get('GOOGLE_API_CLIENT_ID'),
+        'client_secret': os.environ.get('GOOGLE_API_CLIENT_SECRET'),
         'redirect_uri': 'https://api.healthercise.k1h.dev/refresh_token',
         'grant_type': 'refresh_token',
         'access_type': 'offline',

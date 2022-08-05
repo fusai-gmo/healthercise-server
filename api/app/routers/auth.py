@@ -42,7 +42,10 @@ async def auth_callback(code: str = ''):
     # access_token = data['access_token']
     id_info = google_id_token.verify_oauth2_token(id_token, google_requests.Request(), client_id)
     user = await get_user_by_firebase_id(db, id_info['sub'])
-    user.email = id_info['email']
+    print(id_info)
+    
+    if user is not None:
+      user.email = id_info['email']
     
     if 'refresh_token' in data:
       refresh_token = data['refresh_token']
