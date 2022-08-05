@@ -173,6 +173,7 @@ app.include_router(cron.router)
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    "https://healthercise.k1h.dev"
 ]
 
 app.add_middleware(
