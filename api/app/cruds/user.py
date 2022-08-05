@@ -69,6 +69,7 @@ async def get_user(db: Session, user_id: int):
         },
         "activity_log": user.activity_log,
         "todos":get_users_calendar(user_id),
+        "calendar":token_crud.get_users_calendar(user_id),
     }
 
 async def get_user_by_firebase_id(db: Session, firebase_id: str):
