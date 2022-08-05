@@ -25,12 +25,3 @@ async def update_user_info(userId: int, user: user_schema.UserCreate, id_token: 
     # if not db_user:
     #     raise HTTPException(status_code=400, detail="User not found")
     return user_cruds.update_user(db, user, userId)
-
-# @router.get('/users/{userId}/achievement')
-# async def get_achievement():
-#     pass
-
-
-# @router.get('/users/{userId}/todo/done/{taskId}')
-# async def complete_task():
-#     pass
