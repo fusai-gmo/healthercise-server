@@ -13,6 +13,8 @@ import os
 client_id = os.getenv("GOOGLE_API_CLIENT_ID", "not set")
 client_secret = os.getenv("GOOGLE_API_CLIENT_SECRET", "not set")
 redirect_uri = os.getenv("GOOGLE_API_REDIRECT_URI", "not set")
+app_redirect_uri = os.getenv("APP_REDIRECT_URI", "not set")
+
 
 router = APIRouter()
 
@@ -36,16 +38,16 @@ async def auth_callback(code: str = ''):
 
     data = res.json()
     
-    refresh_token = data['refresh_token']
     id_token = data['id_token']
     # access_token = data['access_token']
-
     id_info = google_id_token.verify_oauth2_token(id_token, google_requests.Request(), client_id)
     user = await get_user_by_firebase_id(db, id_info['sub'])
+    
+    if 'refresh_token' in data:
+      refresh_token = data['refresh_token']
+      await save_refresh_token(db, refresh_token, id_info['sub'], user)
 
-    await save_refresh_token(db, refresh_token, id_info['sub'], user)
-
-    response = RedirectResponse(url='http://localhost:3000/profile')
+    response = RedirectResponse(url=app_redirect_uri)
     response.set_cookie(key="id_token", value=id_token, httponly=True, secure=True)
 
     return response
