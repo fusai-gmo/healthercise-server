@@ -84,11 +84,12 @@ def update_user(db:Session,new_user:user_schema.UserCreate, user_id):
     user.name = new_user.userName
     user.email = new_user.email
     sex_dic={"male":1,"female":2,"other":3}
-    # user.sex[0].sex = sex_dic[new_user.gender]
+    user.sex[0].sex = sex_dic[new_user.gender]
     user.age = new_user.age
     user.height = new_user.height
     user.weight = new_user.weight
-    # user.activity_level[0].level = new_user.activeLevel
+    user.slack_id = new_user.slackId
+    user.activity_level[0].level = new_user.activeLevel
     # user.commute[0].commute_is_activity=new_user.includeCommutingTime
     # user.commute[1].commute_is_activity=new_user.includeCommutingTime
     # user.commute[0].commute_start_time = new_user.goWorkTime.start

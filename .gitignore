@@ -47,3 +47,4 @@ logs/
 .env
 
 !.env.example
+api/app/cruds/client_secret.json
