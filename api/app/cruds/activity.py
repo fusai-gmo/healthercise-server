@@ -35,9 +35,11 @@ def get_recent_activity_finished(db: Session, user_id: int):
 def update_recent_activity_finished(db: Session, user_id: int):
     user = db.query(user_model.user).get(user_id)
     user.activity_log[0].is_done = True
+    db.commit()
     return user.activity_log[0]
   
 def update_recent_activity_finished_bySlack(db: Session, slackId: str):
     user = db.query(user_model.user).filter(user_model.user.slack_id == slackId).first()
     user.activity_log[0].is_done = True
+    db.commit()
     return user.activity_log[0]

@@ -11,6 +11,8 @@ from slack_bolt import App
 from slack_bolt.adapter.fastapi import SlackRequestHandler
 from urllib import parse
 
+from threading import Thread
+
 # モデル読み込み
 import models.user
 import models.sex
@@ -137,13 +139,19 @@ def action_button_click(body, ack, say):
     ack()
     say(f"<@{body['user']['id']}> clicked the button")
 
+def update_data_bySlack(db,slackId):
+    print("OKOKOKOKOK")
+    # return activity_cruds.update_recent_activity_finished_bySlack(db,slackId)
 
 @bot.action("button_click_yes")
-async def action_button_yes_click(body, ack, say):
+def action_button_yes_click(body, ack, say):
     # Acknowledge the action
+    # job = Thread(target=update_data_bySlack, args=(db,body['user']['id'],))
+    # job.start()
     ack()
     say(f"Nice, <@{body['user']['id']}>! Congraturations!!")
     activity_cruds.update_recent_activity_finished_bySlack(db,body['user']['id'])
+    
     
 
 
