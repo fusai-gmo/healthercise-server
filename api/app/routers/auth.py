@@ -38,14 +38,14 @@ async def auth_callback(code: str = ''):
 
     data = res.json()
     
-    refresh_token = data['refresh_token']
     id_token = data['id_token']
     # access_token = data['access_token']
-
     id_info = google_id_token.verify_oauth2_token(id_token, google_requests.Request(), client_id)
     user = await get_user_by_firebase_id(db, id_info['sub'])
-
-    await save_refresh_token(db, refresh_token, id_info['sub'], user)
+    
+    if 'refresh_token' in data:
+      refresh_token = data['refresh_token']
+      await save_refresh_token(db, refresh_token, id_info['sub'], user)
 
     response = RedirectResponse(url=app_redirect_uri)
     response.set_cookie(key="id_token", value=id_token, httponly=True, secure=True)
