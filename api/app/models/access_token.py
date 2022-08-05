@@ -12,7 +12,7 @@ class access_token(Base):
     """
     __tablename__ = 'access_token'
     id = Column('id', Integer, primary_key = True, autoincrement=True)
-    user_id = Column('user_id',ForeignKey('user.id'))
+    user_id = Column('user_id', Integer)
     token_type_id = Column('token_type_id', ForeignKey('token_type.id'))
     token = Column('token', String(300))
 

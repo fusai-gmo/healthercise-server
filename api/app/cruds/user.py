@@ -12,24 +12,25 @@ async def get_user(db: Session, user_id: int):
     if user is None:
         return None
     sex_dic={"1":"male","2":"female","3":"other"}
+
     return {
         "id":user.id,
         "userName":user.name,
         "email":user.email,
-        "gender": sex_dic[user.sex[0].sex],
+        "gender": "male" if len(user.sex) == 0  else sex_dic[user.sex[0].sex],
         "age":user.age,
         "height":user.height,
         "weight":user.weight,
-        "activeLevel":user.activity_level[0].level,
-        "includeCommutingTime":user.commute[0].commute_is_activity,
+        "activeLevel": 1 if len(user.activity_level) == 0  else user.activity_level[0].level,
+        "includeCommutingTime": False if len(user.commute) == 0  else user.commute[0].commute_is_activity,
         "slackId":user.slack_id,
         "goWorkTime":{
-            "start":user.commute[0].commute_start_time,
-            "finish":user.commute[0].commute_finish_time
+            "start": "08:00:00" if len(user.commute) == 0  else user.commute[0].commute_start_time,
+            "finish":"09:00:00" if len(user.commute) == 0  else user.commute[0].commute_finish_time
         },
         "leaveWorkTime":{
-            "start":user.commute[1].commute_start_time,
-            "finish":user.commute[1].commute_finish_time
+            "start": "18:00:00" if len(user.commute) == 0  else user.commute[1].commute_start_time,
+            "finish": "19:00:00" if len(user.commute) == 0 else user.commute[1].commute_finish_time
         },
         "activeTime":{
             "start":user.notify_start_time,
@@ -51,20 +52,21 @@ def update_user(db:Session,new_user:user_schema.UserCreate, user_id):
     user = db.query(user_model.user).get(user_id)
     if user is None:
         return None
+    print(user)
     user.name = new_user.userName
     user.email = new_user.email
     sex_dic={"male":1,"female":2,"other":3}
-    user.sex[0].sex = sex_dic[new_user.gender]
+    # user.sex[0].sex = sex_dic[new_user.gender]
     user.age = new_user.age
     user.height = new_user.height
     user.weight = new_user.weight
-    user.activity_level[0].level = new_user.activeLevel
-    user.commute[0].commute_is_activity=new_user.includeCommutingTime
-    user.commute[1].commute_is_activity=new_user.includeCommutingTime
-    user.commute[0].commute_start_time = new_user.goWorkTime.start
-    user.commute[0].commute_start_time = new_user.goWorkTime.finish
-    user.commute[1].commute_start_time = new_user.leaveWorkTime.start
-    user.commute[1].commute_start_time = new_user.leaveWorkTime.finish
+    # user.activity_level[0].level = new_user.activeLevel
+    # user.commute[0].commute_is_activity=new_user.includeCommutingTime
+    # user.commute[1].commute_is_activity=new_user.includeCommutingTime
+    # user.commute[0].commute_start_time = new_user.goWorkTime.start
+    # user.commute[0].commute_start_time = new_user.goWorkTime.finish
+    # user.commute[1].commute_start_time = new_user.leaveWorkTime.start
+    # user.commute[1].commute_start_time = new_user.leaveWorkTime.finish
     db.commit()
 
 
