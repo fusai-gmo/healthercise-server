@@ -25,5 +25,5 @@ async def add_new_user(user: user_schema.UserCreate, id_token: Optional[str] = C
     return res
 
 @router.get('/user/getId/{slackId}')
-def get_slack_id():
-    pass
+async def get_user_by_slackId(slackId: str, id_token: Optional[str] = Cookie(None)):
+    return user_cruds.get_user_by_slackId(db,slackId)
