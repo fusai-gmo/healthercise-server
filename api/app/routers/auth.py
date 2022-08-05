@@ -6,7 +6,7 @@ from google.auth.transport import requests as google_requests
 from auth.id_token import verify_id_token
 from cruds.user import get_user_by_firebase_id
 from setting import session as db
-from cruds.token import save_refresh_token
+from cruds.user import save_refresh_token
 import requests
 import os
 
