@@ -4,6 +4,7 @@ import models.sex as sex_model
 import models.commute as commute_model
 import models.activity_level as activity_level_model
 import schemas.user as user_schema
+# import cruds.token as token_crud
 from sqlalchemy import Time
 from datetime import datetime as dt
 
@@ -36,7 +37,8 @@ async def get_user(db: Session, user_id: int):
             "start":user.notify_start_time,
             "finish":user.notify_finish_time
         },
-        "activity_log": user.activity_log
+        "activity_log": user.activity_log,
+        "todos":token_crud.get_users_calendar(user_id),
     }
 
 async def get_user_by_firebase_id(db: Session, firebase_id: str):
@@ -127,3 +129,42 @@ async def create_user(db: Session, user: user_schema.UserCreate):
     db.commit()
 
     return db_user
+
+
+async def save_refresh_token(db: Session, access_token: str, firebase_id: str, user):
+  if user is None:
+    user_create = UserCreate(
+      userName=None,
+      firebaseId=firebase_id,
+      email=None,
+      gender="male",
+      age=20,
+      height=180,
+      weight=65,
+      activeLevel=1,
+      includeCommutingTime=False,
+      goWorkTime=TimeDuration(
+        start="09:00",
+        finish="10:00",
+      ),
+      leaveWorkTime=TimeDuration(
+        start="18:00",
+        finish="19:00",
+      ),
+      activeTime=TimeDuration(
+        start="10:00",
+        finish="19:00",
+      ),
+      slackId=None,
+    )
+    
+    res = await create_user(db, user_create)
+    
+    user_id = res.id
+
+  else:
+    user_id = user.id
+
+  query = sql_text("INSERT INTO access_token VALUES (:id, :user_id, :token_type_id, :token) ON DUPLICATE KEY UPDATE token = :token2")
+  db.execute(query, {"id": 0, "user_id": user_id, "token_type_id": 1, "token": access_token, "token2": access_token})
+  db.commit()
