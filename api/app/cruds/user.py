@@ -125,4 +125,4 @@ async def create_user(db: Session, user: user_schema.UserCreate):
     db.add(db_activity_level)
     db.commit()
 
-    return await get_user(db, user_id)
+    return db_user
